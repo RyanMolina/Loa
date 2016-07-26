@@ -7,31 +7,16 @@ public class Move {
 
 
 
-    public static Move create(String s, Board board) {
-        s = s.trim();
-        if (s.matches("[a-h][1-9]-[a-h][1-9]\\b.*")) {
-            String p1 = s.substring(0, 2);
-            String p2 = s.substring(3);
-            System.out.println(board.row(p1)-1 + ", " + board.col(p1));
-            return create(board.col(p1), board.row(p1)-1,
-                          board.col(p2), board.row(p2)-1, board);
-        } else {
-            return null;
-        }
-    }
-
     static Move create(int column0, int row0, int column1, int row1, Board board) {
 
 
-        if (!inBounds(column0+1, row0+1) || !inBounds(column1+1, row1+1)) {
+        if (!inBounds(column0, row0) || !inBounds(column1, row1)) {
 
             return null;
         }
         int moved = board.get(column0, row0).ordinal();
         int replaced = board.get(column1, row1).ordinal();
-        System.out.println(moves[column0][row0][column1][row1][moved][replaced]);
-        if(moved == EMP.ordinal()) return null;
-        else return moves[column0][row0][column1][row1][moved][replaced];
+        return moves[column0][row0][column1][row1][moved][replaced];
     }
 
 
@@ -41,13 +26,8 @@ public class Move {
                       board);
     }
 
-    private Move(int col0, int row0, int col1, int row1,
-                 Piece moved, Piece replaced) {
-        assert 1 <= col0 && col0 <= M && 1 <= row0 && row0 <= M
-            && 1 <= col1 && col1 <= M && 1 <= row1 && row1 <= M
-            && (col0 == col1 || row0 == row1 || col0 + row0 == col1 + row1
-                || col0 - row0 == col1 - row1)
-            && moved != EMP && moved != null && replaced != null;
+    private Move(int col0, int row0, int col1, int row1, Piece moved, Piece replaced) {
+
         this.col0 = col0;
         this.row0 = row0;
         this.col1 = col1;
@@ -87,14 +67,10 @@ public class Move {
     }
 
     private static boolean inBounds(int c, int r) {
-        return 1 <= c && c <= M && 1 <= r && r <= M;
+        return 0 <= c && c < M &&  0 <= r && r < M;
     }
 
-    @Override
-    public String toString() {
-        return String.format("%c%d-%c%d", (char) (col0 - 1 + 'a'), row0,
-                             (char) (col1 - 1 + 'a'), row1);
-    }
+
 
 
     private final int col0, row0, col1, row1;
@@ -103,19 +79,18 @@ public class Move {
 
     private final Piece replaced;
 
-    private static Move[][][][][][] moves =
-        new Move[M + 1][M + 1][M + 1][M + 1][2][3];
+    private static Move[][][][][][] moves = new Move[M + 1][M + 1][M + 1][M + 1][2][3];
 
     static {
-        for (int m = 0; m <= 1; m++) {
-            for (int r = 0; r <= 2; r++) {
+        for (int m = 0; m < 2; m++) {
+            for (int r = 0; r < 3; r++) {
                 Piece pm = Piece.values()[m], pr = Piece.values()[r];
                 if (pm == pr || pm == EMP) {
                     continue;
                 }
-                for (int r0 = 1; r0 <= M; r0++) {
-                    for (int c0 = 1; c0 <= M; c0++) {
-                        for (int k = 1; k <= M; k++) {
+                for (int r0 = 0; r0 < M; r0++) {
+                    for (int c0 = 0; c0 < M; c0++) {
+                        for (int k = 0; k < M; k++) {
                             if (k != r0) {
                                 moves[c0][r0][c0][k][m][r] = new Move(c0, r0, c0, k, pm, pr);
                                 if ((char) (c0 - r0 + k - 1) < M) {
@@ -124,11 +99,12 @@ public class Move {
                             }
                             if (k != c0) {
                                 moves[c0][r0][k][r0][m][r] = new Move(c0, r0, k, r0, pm, pr);
-                                if ((char) (c0 + r0 - k - 1) < M) {
+                                if ((char) (c0 + r0 - k) < M) {
                                     moves[c0][r0][k][c0 + r0 - k][m][r] = new Move(c0, r0, k, c0 + r0 - k,
                                                    pm, pr);
                                 }
                             }
+                            if(moves[c0][r0][k][r0][m][r] != null) System.out.println(moves[c0][r0][k][r0][m][r]);
                         }
                     }
                 }

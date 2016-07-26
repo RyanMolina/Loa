@@ -29,7 +29,7 @@ class MachinePlayer extends Player {
     }
 
     private Move minMax(Piece side, int depth, int alpha, int beta) {
-        Board board = new Board(getBoard());
+        Board board = getGame().getBoard();
         Iterator<Move> iter = board.legalMoves();
         Move currMove;
         Move bestMove = null;
@@ -69,7 +69,7 @@ class MachinePlayer extends Player {
     }
 
     private int eval(Move move) {
-        Board board = new Board(getBoard());
+        Board board = getGame().getBoard();
         int val;
         board.makeMove(move);
         if (board.piecesContiguous(board.turn())) {

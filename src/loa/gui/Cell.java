@@ -11,17 +11,13 @@ public class Cell extends JButton {
         return row;
     }
 
-    public void setRow(int row) {
-        this.row = row;
-    }
+
 
     public int getCol() {
         return col;
     }
 
-    public void setCol(int col) {
-        this.col = col;
-    }
+
     public void setHighlighted(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
         setBackground((isHighlighted) ? Color.GREEN : this.color);

@@ -2,10 +2,8 @@ package loa.core;
 
 
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.regex.Pattern;
 import java.util.HashSet;
 import static loa.core.Piece.*;
 import static loa.core.Direction.*;
@@ -15,19 +13,11 @@ public class Board implements Iterable<Move> {
     /** Size of a board. */
     static final int M = 8;
 
-    private static final Pattern ROW_COL = Pattern.compile("^[a-h][1-8]$");
-
-    public Board(Piece[][] initialContents, Piece turn) {
-        initialize(initialContents, turn);
-    }
 
     public Board() {
         clear();
     }
 
-    Board(Board board) {
-        copyFrom(board);
-    }
 
     public void initialize(Piece[][] contents, Piece side) {
         moves.clear();
@@ -44,40 +34,11 @@ public class Board implements Iterable<Move> {
         initialize(INITIAL_PIECES, BP);
     }
 
-    public void copyFrom(Board board) {
-        if (board == this) {
-            return;
-        }
-        moves.clear();
-        moves.addAll(board.moves);
-        turn = board.turn;
-
-        for (int c = 0; c < M; c++) {
-            for (int r = 0; r < M; r++) {
-                set(c, r, board.get(c, r), turn);
-            }
-        }
-    }
 
     public Piece get(int c, int r) {
         return currentState[r][c];
     }
 
-
-    static int col(String sq) {
-        if (!ROW_COL.matcher(sq).matches()) {
-            throw new IllegalArgumentException("bad square designator");
-        }
-        return sq.charAt(0) - 'a';
-    }
-
-
-    static int row(String sq) {
-        if (!ROW_COL.matcher(sq).matches()) {
-            throw new IllegalArgumentException("bad square designator");
-        }
-        return sq.charAt(1) - '0';
-    }
 
     private void set(int c, int r, Piece v, Piece next) {
         currentState[r][c] = v;
@@ -91,7 +52,7 @@ public class Board implements Iterable<Move> {
     }
 
     void makeMove(Move move) {
-        assert isLegal(move);
+
         moves.add(move);
         Piece replaced = move.replacedPiece();
         int c0 = move.getCol0(), c1 = move.getCol1();
@@ -105,7 +66,7 @@ public class Board implements Iterable<Move> {
     }
 
     void retract() {
-        assert movesMade() > 0;
+
         Move move = moves.remove(moves.size() - 1);
         Piece replaced = move.replacedPiece();
         int c0 = move.getCol0(), c1 = move.getCol1();
@@ -125,7 +86,8 @@ public class Board implements Iterable<Move> {
         int c0 = move.getCol0();
         int r0 = move.getRow0();
         Piece startingPiece = get(c0, r0);
-        return startingPiece == turn && move.length() == pieceCountAlong(move) && !blocked(move);
+        //FIX ME later startingPiece == turn &&  && !blocked(move)
+        return  move.length() == pieceCountAlong(move);
     }
 
     Iterator<Move> legalMoves() {
@@ -397,6 +359,7 @@ public class Board implements Iterable<Move> {
         }
 
     }
+
     public Piece[][] getState() {
         return currentState;
     }

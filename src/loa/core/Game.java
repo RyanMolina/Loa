@@ -47,24 +47,11 @@ public class Game extends JFrame implements ActionListener{
 
 
             while (true) {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (line != null) {
 
-                    Move move = Move.create(line, board);
-                    if (move == null) {
-                        error("invalid move: %s%n", line);
-                    } else if (getBoard().get(move.getCol0(), move.getRow0()) == EMP) {
-                        error("invalid move: choosing an empty piece");
-                    } else if (getBoard().get(move.getCol0(), move.getRow0()) != (getBoard().turn())) {
-                        error("invalid move: choosing an enemy piece");
-                    } else {
-                        return move;
-                    }
-                }
+
+                //Move move = Move.create(line, board);
+                //System.out.println(move);
+
 
             }
 
@@ -156,20 +143,17 @@ public class Game extends JFrame implements ActionListener{
         Direction dir = Direction.N;
         Move move = null;
         Cell b = (Cell)e.getSource();
-        if(line != null) line = line + "-" +getCharForNumber(b.getCol()) + (b.getRow()+1);
-        else line = getCharForNumber(b.getCol()) + (b.getRow()+1);
         while (dir != null) {
+
 
             move = Move.create(b.getCol(), b.getRow(), board.pieceCountAlong(b.getCol(), b.getRow(), dir), dir, board);
             dir = dir.succ();
             if (board.isLegal(move)) {
-                System.exit(0);
+
                 Cell dest = boardPane.getBoardSquares()[move.getRow1()][move.getCol1()];
                 dest.setHighlighted(!dest.isHighlighted());
             }
         }
     }
-    private String getCharForNumber(int i) {
-        return i > 0 && i < 27 ? String.valueOf((char)(i + 'a')) : null;
-    }
+
 }
