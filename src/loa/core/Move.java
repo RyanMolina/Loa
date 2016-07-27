@@ -16,6 +16,7 @@ public class Move {
         }
         int moved = board.get(column0, row0).ordinal();
         int replaced = board.get(column1, row1).ordinal();
+        if(moved == EMP.ordinal()) return null;
         return moves[column0][row0][column1][row1][moved][replaced];
     }
 
@@ -37,20 +38,20 @@ public class Move {
     }
 
 
-    int getCol0() {
+    public int getCol0() {
         return col0;
     }
 
 
-    int getRow0() {
+    public int getRow0() {
         return row0;
     }
 
-    int getCol1() {
+    public int getCol1() {
         return col1;
     }
 
-    int getRow1() {
+    public int getRow1() {
         return row1;
     }
 
@@ -104,7 +105,6 @@ public class Move {
                                                    pm, pr);
                                 }
                             }
-                            if(moves[c0][r0][k][r0][m][r] != null) System.out.println(moves[c0][r0][k][r0][m][r]);
                         }
                     }
                 }

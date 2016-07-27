@@ -7,6 +7,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.List;
+import loa.core.Move;
 import loa.core.Piece;
 
 
@@ -105,6 +107,12 @@ public class BoardPane extends JPanel {
 
                  }
             }
+        }
+    }
+    public void showLegalMoves(List<Move> legalMoves){
+        for(Move m : legalMoves) {
+            Cell c = boardSquares[m.getRow1()][m.getCol1()];
+            c.setHighlighted(!c.isHighlighted());
         }
     }
 

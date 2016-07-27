@@ -13,11 +13,9 @@ public class Board implements Iterable<Move> {
     /** Size of a board. */
     static final int M = 8;
 
-
     public Board() {
-        clear();
+        initialize(INITIAL_PIECES, BP);
     }
-
 
     public void initialize(Piece[][] contents, Piece side) {
         moves.clear();
@@ -29,16 +27,25 @@ public class Board implements Iterable<Move> {
         }
         turn = side;
     }
+    Board(Board board) {copyFrom(board);}
+    void copyFrom(Board board) {
+        if (board == this) {
+            return;
+        }
+        moves.clear();
+        moves.addAll(board.moves);
+        turn = board.turn;
 
-    void clear() {
-        initialize(INITIAL_PIECES, BP);
+        for (int c = 0; c < M; c++) {
+            for (int r = 0; r < M; r++) {
+                set(c, r, board.get(c, r), turn);
+            }
+        }
     }
-
 
     public Piece get(int c, int r) {
         return currentState[r][c];
     }
-
 
     private void set(int c, int r, Piece v, Piece next) {
         currentState[r][c] = v;
@@ -52,7 +59,7 @@ public class Board implements Iterable<Move> {
     }
 
     void makeMove(Move move) {
-
+        if(move == null) return;
         moves.add(move);
         Piece replaced = move.replacedPiece();
         int c0 = move.getCol0(), c1 = move.getCol1();
@@ -86,8 +93,7 @@ public class Board implements Iterable<Move> {
         int c0 = move.getCol0();
         int r0 = move.getRow0();
         Piece startingPiece = get(c0, r0);
-        //FIX ME later startingPiece == turn &&  && !blocked(move)
-        return  move.length() == pieceCountAlong(move);
+        return  startingPiece == turn && move.length() == pieceCountAlong(move) && !blocked(move);
     }
 
     Iterator<Move> legalMoves() {
@@ -97,10 +103,6 @@ public class Board implements Iterable<Move> {
     @Override
     public Iterator<Move> iterator() {
         return legalMoves();
-    }
-
-    public boolean isLegalMove() {
-        return iterator().hasNext();
     }
 
     public boolean gameOver() {
@@ -128,16 +130,15 @@ public class Board implements Iterable<Move> {
         starting.add(c);
         starting.add(r);
         hashSet.add(starting);
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
+        for (int x = 0; x < 1; x++) {
+            for (int y = 0; y < 1; y++) {
                 int col = c + x;
                 int row = r + y;
-                if (col >= 1 && col <= M && row >= 1 && row <= M) {
+                if (col >= 0 && col < M && row >= 0 && row < M) {
                     ArrayList<Integer> temp = new ArrayList<>();
                     temp.add(col);
                     temp.add(row);
-                    if (get(col, row) == piece
-                            && !hashSet.contains(temp)) {
+                    if (get(col, row) == piece && !hashSet.contains(temp)) {
                         checkAroundPiece(col, row, hashSet);
                     }
                 }
@@ -305,10 +306,9 @@ public class Board implements Iterable<Move> {
         private Move move;
 
         MoveIterator() {
-            c = 1; r = 1; dir = NOWHERE;
+            c = 0; r = 0; dir = N;
             incr();
         }
-
 
         @Override
         public boolean hasNext() {
@@ -332,21 +332,24 @@ public class Board implements Iterable<Move> {
 
         private void incr() {
             move = null;
-            while (r <= M) {
-                while (c <= M) {
+
+            while (r < M) {
+
+                while (c < M) {
+
                     if (get(c, r) != EMP) {
+
                         while (dir != null) {
-                            move = Move.create(c, r,
-                                    pieceCountAlong(c, r, dir),
-                                    dir, Board.this);
+                            move = Move.create(c, r, pieceCountAlong(c, r, dir), dir, Board.this);
+
                             dir = dir.succ();
                             if (isLegal(move)) {
                                 return;
                             }
                         }
                     }
-                    if (c == M) {
-                        c = 1;
+                    if (c == M-1) {
+                        c = 0;
                         dir = N;
                         break;
                     } else {

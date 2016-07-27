@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import static java.lang.Thread.sleep;
+
 class MachinePlayer extends Player {
 
 
@@ -19,6 +21,7 @@ class MachinePlayer extends Player {
 
     @Override
     public Move makeMove() {
+        System.out.println("Making move for: " + getBoard().turn());
         if (hashCounter % 10 == 0) {
             moves.clear();
             hashCounter = 0;
@@ -29,7 +32,8 @@ class MachinePlayer extends Player {
     }
 
     private Move minMax(Piece side, int depth, int alpha, int beta) {
-        Board board = getGame().getBoard();
+        Board board = new Board(getBoard());
+
         Iterator<Move> iter = board.legalMoves();
         Move currMove;
         Move bestMove = null;
@@ -37,6 +41,7 @@ class MachinePlayer extends Player {
         int bestVal = Integer.MIN_VALUE;
         while (iter.hasNext()) {
             currMove = iter.next();
+
             if (moves.contains(currMove)) {
                 continue;
             }
@@ -46,6 +51,7 @@ class MachinePlayer extends Player {
                 bestMove = currMove;
             }
         }
+
         moves.add(bestMove);
         return bestMove;
     }
@@ -59,8 +65,7 @@ class MachinePlayer extends Player {
                     int y1 = coords.get(1);
                     int x2 = coords2.get(0);
                     int y2 = coords2.get(1);
-                    double dist = Math.sqrt(Math.pow((y2 - y1), 2)
-                            + Math.pow((x2 - x1), 2));
+                    double dist = Math.sqrt(Math.pow((y2 - y1), 2) + Math.pow((x2 - x1), 2));
                     sum += (int) dist;
                 }
             }
@@ -69,15 +74,15 @@ class MachinePlayer extends Player {
     }
 
     private int eval(Move move) {
-        Board board = getGame().getBoard();
+        Board board = new Board(getBoard());
         int val;
+
         board.makeMove(move);
         if (board.piecesContiguous(board.turn())) {
             val = Integer.MAX_VALUE;
         } else {
             int humanMove = piecesDist(board.arrayofCoordinates(board.turn()));
-            int machineMove = piecesDist(board.arrayofCoordinates
-                    (board.turn().opposite()));
+            int machineMove = piecesDist(board.arrayofCoordinates(board.turn().opposite()));
             val = humanMove - machineMove;
         }
         return val;
