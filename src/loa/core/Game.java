@@ -87,11 +87,12 @@ public class Game extends JFrame implements ActionListener{
         if (board.gameOver()) {
             Piece piece;
             if (board.piecesContiguous(Piece.BP) && board.piecesContiguous(Piece.WP)) {
+                System.out.println("Tie");
                 piece = board.turn();
             } else {
                 piece = Piece.BP;
             }
-            if (piece != WP) {
+            if (piece == WP) {
                 System.out.println("White wins.");
             } else {
                 System.out.println("Black wins.");
@@ -109,13 +110,11 @@ public class Game extends JFrame implements ActionListener{
             m = Move.create(m.getCol0(), m.getRow0(), b.getCol(), b.getRow(), board);
             if(legalMoves.contains(m)) {
                 next = m;
-                //boardPane.update(board.getState());
             }
             boardPane.showLegalMoves(legalMoves);
-            legalMoves.clear();
-            return;
-        }
 
+        }
+        legalMoves.clear();
         Direction dir = Direction.N;
         Move move;
         while (dir != null) {

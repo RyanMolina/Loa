@@ -21,7 +21,6 @@ class MachinePlayer extends Player {
 
     @Override
     public Move makeMove() {
-        System.out.println("Making move for: " + getBoard().turn());
         if (hashCounter % 10 == 0) {
             moves.clear();
             hashCounter = 0;
