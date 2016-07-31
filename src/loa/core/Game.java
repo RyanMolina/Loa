@@ -86,16 +86,21 @@ public class Game extends JFrame implements ActionListener{
     private void announceWinner() {
         if (board.gameOver()) {
             Piece piece;
-            if (board.piecesContiguous(Piece.BP) && board.piecesContiguous(Piece.WP)) {
+            boolean white = board.piecesContiguous(Piece.WP);
+            boolean black = board.piecesContiguous(Piece.BP);
+            if (white && black) {
                 System.out.println("Tie");
-                piece = board.turn();
-            } else {
-                piece = Piece.BP;
-            }
-            if (piece == WP) {
-                System.out.println("White wins.");
-            } else {
+                piece = board.turn().opposite();
+                if (piece == BP) {
+                    System.out.println("Black wins");
+                } else {
+                    System.out.println("White wins.");
+                }
+
+            } else if (black) {
                 System.out.println("Black wins.");
+            } else {
+                System.out.println("White wins.");
             }
         }
     }

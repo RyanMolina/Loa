@@ -8,51 +8,60 @@ import static java.lang.Thread.sleep;
 
 class MachinePlayer extends Player {
 
-
-    private HashSet<Move> moves = new HashSet<>();
-
-
-    private int hashCounter = 0;
-
-
     MachinePlayer(Piece side, Game game) {
         super(side, game);
     }
 
     @Override
     public Move makeMove() {
-        if (hashCounter % 10 == 0) {
-            moves.clear();
-            hashCounter = 0;
-        }
-        hashCounter += 1;
-        return minMax(getBoard().turn(), 1, Integer.MIN_VALUE,
-                Integer.MAX_VALUE);
-    }
-
-    private Move minMax(Piece side, int depth, int alpha, int beta) {
-        Board board = new Board(getBoard());
-
-        Iterator<Move> iter = board.legalMoves();
+        Board boardState = new Board(getBoard());
+        Iterator<Move> root = boardState.legalMoves();
+        int currVal = 0;
+        int bestVal = Integer.MIN_VALUE;
         Move currMove;
         Move bestMove = null;
-        int currVal;
-        int bestVal = Integer.MIN_VALUE;
-        while (iter.hasNext()) {
-            currMove = iter.next();
-
-            if (moves.contains(currMove)) {
-                continue;
-            }
-            currVal = eval(currMove);
+        while (root.hasNext()) {
+            currMove = root.next();
+            currVal = minimax(result(boardState, currMove), 2, true);
             if (currVal > bestVal) {
                 bestVal = currVal;
                 bestMove = currMove;
             }
         }
-
-        moves.add(bestMove);
         return bestMove;
+    }
+    private int minimax(Board boardState, int depth, boolean maximizingPlayer) {
+        if(depth == 0) return eval(boardState);
+        if(maximizingPlayer) {
+            int v = Integer.MIN_VALUE;
+            Iterator<Move> actions = boardState.legalMoves();
+            while(actions.hasNext()) {
+                v = max(v, minimax(result(boardState, actions.next()), depth - 1, false));
+            }
+            return v;
+        } else {
+            int v = Integer.MAX_VALUE;
+            Iterator<Move> actions = boardState.legalMoves();
+            while(actions.hasNext()) {
+                v = min(v, minimax(result(boardState, actions.next()), depth - 1, true));
+            }
+            return v;
+        }
+    }
+
+    private Board result(Board boardState, Move action) {
+        Board b = new Board(boardState);
+        b.makeMove(action);
+        System.out.println(action.movedPiece());
+        return b;
+    }
+
+    private int min(int x, int y) {
+        return (x >= y) ? y : x;
+    }
+    private int max(int x, int y) {
+
+        return (x <= y) ? y : x;
     }
 
     private int piecesDist(ArrayList<ArrayList<Integer>> pieces) {
@@ -72,11 +81,18 @@ class MachinePlayer extends Player {
         return sum;
     }
 
-    private int eval(Move move) {
-        Board board = new Board(getBoard());
-        int val;
+    private int eval(Board board) {
+        int[] pieceSquareTable = {  -80, -25, -20, -20, -20, -25, -80,
+                                    -25,  10,  10,  10,  10,  10, -25,
+                                    -20,  10,  25,  25,  25,  10, -20,
+                                    -20,  10,  25,  50,  50,  10, -20,
+                                    -20,  10,  25,  50,  50,  10, -20,
+                                    -20,  10,  25,  25,  25,  10, -20,
+                                    -25,  10,  10,  10,  10,  10, -25,
+                                    -80, -25, -20, -20, -20, -25, -80
+                                };
 
-        board.makeMove(move);
+        int val;
         if (board.piecesContiguous(board.turn())) {
             val = Integer.MAX_VALUE;
         } else {

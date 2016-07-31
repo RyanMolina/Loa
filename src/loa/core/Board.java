@@ -270,6 +270,13 @@ public class Board implements Iterable<Move> {
         return false;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        Board b = (Board) obj;
+        return b.toString().equals(this.toString());
+    }
+
+
     private static final Piece[][] INITIAL_PIECES = {
         { EMP, BP,  BP,  BP,  BP,  BP,  BP,  EMP },
         { WP,  EMP, EMP, EMP, EMP, EMP, EMP, WP  },
@@ -296,6 +303,9 @@ public class Board implements Iterable<Move> {
             { EMP, BP,  BP,  BP,  BP,  BP,  BP,  EMP }
     };
 
+    public Piece[][] getState() {
+        return currentState;
+    }
 
     private class MoveIterator implements Iterator<Move> {
 
@@ -341,7 +351,6 @@ public class Board implements Iterable<Move> {
 
                         while (dir != null) {
                             move = Move.create(c, r, pieceCountAlong(c, r, dir), dir, Board.this);
-
                             dir = dir.succ();
                             if (isLegal(move)) {
                                 return;
@@ -362,7 +371,4 @@ public class Board implements Iterable<Move> {
         }
     }
 
-    public Piece[][] getState() {
-        return currentState;
-    }
 }
