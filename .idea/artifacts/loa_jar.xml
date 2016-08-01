@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="loa:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/loa_jar</output-path>
+    <root id="archive" name="loa.jar">
+      <element id="module-output" name="loa" />
+    </root>
+  </artifact>
+</component>

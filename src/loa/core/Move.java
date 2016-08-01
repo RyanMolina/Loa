@@ -11,7 +11,6 @@ public class Move {
 
 
         if (!inBounds(column0, row0) || !inBounds(column1, row1)) {
-
             return null;
         }
         int moved = board.get(column0, row0).ordinal();
@@ -55,11 +54,11 @@ public class Move {
         return row1;
     }
 
-    Piece movedPiece() {
+    public Piece movedPiece() {
         return moved;
     }
 
-    Piece replacedPiece() {
+    public Piece replacedPiece() {
         return replaced;
     }
 

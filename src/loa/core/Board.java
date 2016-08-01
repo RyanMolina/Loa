@@ -1,17 +1,19 @@
 package loa.core;
 
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.HashSet;
+import java.awt.Point;
+import java.lang.reflect.Array;
+import java.util.*;
 import static loa.core.Piece.*;
 import static loa.core.Direction.*;
 
 public class Board implements Iterable<Move> {
 
-    /** Size of a board. */
     static final int M = 8;
+
+    private final List<Point> blackCoords = new ArrayList<>();
+    private final List<Point> whiteCoords = new ArrayList<>();
+
 
     public Board() {
         initialize(INITIAL_PIECES, BP);
@@ -19,13 +21,19 @@ public class Board implements Iterable<Move> {
 
     public void initialize(Piece[][] contents, Piece side) {
         moves.clear();
-
+        blackCoords.clear();
+        whiteCoords.clear();
         for (int row = 0; row < M; row++) {
             for (int col = 0; col < M; col++) {
                 set(col, row, contents[row][col]);
+                if(contents[row][col] == BP) blackCoords.add(new Point(row, col));
+                else if(contents[row][col] == WP) whiteCoords.add(new Point(row, col));
             }
         }
         turn = side;
+    }
+    public void newGame() {
+        initialize(INITIAL_PIECES, BP);
     }
     Board(Board board) {copyFrom(board);}
     void copyFrom(Board board) {
@@ -34,8 +42,11 @@ public class Board implements Iterable<Move> {
         }
         moves.clear();
         moves.addAll(board.moves);
+        blackCoords.clear();
+        whiteCoords.clear();
+        blackCoords.addAll(board.blackCoords);
+        whiteCoords.addAll(board.whiteCoords);
         turn = board.turn;
-
         for (int c = 0; c < M; c++) {
             for (int r = 0; r < M; r++) {
                 set(c, r, board.get(c, r), turn);
@@ -67,21 +78,34 @@ public class Board implements Iterable<Move> {
         if (replaced != EMP) {
             set(c1, r1, EMP);
         }
+        if(move.movedPiece() == BP) {
+            blackCoords.set(blackCoords.indexOf(new Point(r0, c0)), new Point(r1, c1));
+        } else if(move.movedPiece() == WP) {
+            whiteCoords.set(whiteCoords.indexOf(new Point(r0, c0)), new Point(r1, c1));
+        }
         set(c1, r1, move.movedPiece());
         set(c0, r0, EMP);
         turn = turn.opposite();
     }
 
-    void retract() {
-
-        Move move = moves.remove(moves.size() - 1);
-        Piece replaced = move.replacedPiece();
-        int c0 = move.getCol0(), c1 = move.getCol1();
-        int r0 = move.getRow0(), r1 = move.getRow1();
-        Piece movedPiece = move.movedPiece();
-        set(c1, r1, replaced);
-        set(c0, r0, movedPiece);
-        turn = turn.opposite();
+    public Move retract() {
+        Move move = null;
+        if(movesMade() != 0) {
+            move = moves.remove(moves.size() - 1);
+            Piece replaced = move.replacedPiece();
+            int c0 = move.getCol0(), c1 = move.getCol1();
+            int r0 = move.getRow0(), r1 = move.getRow1();
+            Piece movedPiece = move.movedPiece();
+            if(move.movedPiece() == BP) {
+                blackCoords.set(blackCoords.indexOf(new Point(r1, c1)), new Point(r0, c0));
+            } else if(move.movedPiece() == WP) {
+                whiteCoords.set(whiteCoords.indexOf(new Point(r1, c1)), new Point(r0, c0));
+            }
+            set(c1, r1, replaced);
+            set(c0, r0, movedPiece);
+            turn = turn.opposite();
+        }
+        return move;
     }
 
     Piece turn() {
@@ -109,62 +133,43 @@ public class Board implements Iterable<Move> {
         return piecesContiguous(BP) || piecesContiguous(WP);
     }
 
-    ArrayList<ArrayList<Integer>> arrayofCoordinates(Piece side) {
-        ArrayList<ArrayList<Integer>> answer = new ArrayList<>();
-        for (int c = 0; c < M; c++) {
-            for (int r = 0; r < M; r++) {
-                if (side == get(c, r)) {
-                    ArrayList<Integer> coords = new ArrayList<>();
-                    coords.add(c);
-                    coords.add(r);
-                    answer.add(coords);
-                }
-            }
-        }
-        return answer;
+    List<Point> arrayofCoordinates(Piece side) {
+        if(side == BP) return blackCoords;
+        else return whiteCoords;
     }
 
-    private void checkAroundPiece(int c, int r, HashSet<ArrayList<Integer>> hashSet) {
+    public int checkAroundPiece(int c, int r, Set<Point> hashSet) {
         Piece piece = get(c, r);
-        ArrayList<Integer> starting = new ArrayList<>();
-        starting.add(c);
-        starting.add(r);
-        hashSet.add(starting);
+        Point p = new Point(r, c);
+        hashSet.add(p);
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 int col = c + x;
                 int row = r + y;
                 if (col >= 0 && col < M && row >= 0 && row < M) {
-                    ArrayList<Integer> temp = new ArrayList<>();
-                    temp.add(col);
-                    temp.add(row);
+                    Point temp = new Point(row, col);
                     if (get(col, row) == piece && !hashSet.contains(temp)) {
                         checkAroundPiece(col, row, hashSet);
                     }
                 }
             }
         }
+        return hashSet.size();
     }
 
     public boolean piecesContiguous(Piece side) {
-        ArrayList<ArrayList<Integer>> coordinates = arrayofCoordinates(side);
-        int col = coordinates.get(0).get(0);
-        int row = coordinates.get(0).get(1);
-        HashSet<ArrayList<Integer>> hashSet = new HashSet<>();
+
+        List<Point> coordinates = arrayofCoordinates(side);
+        int row = (int) coordinates.get(0).getX();
+        int col = (int) coordinates.get(0).getY();
+        Set<Point> hashSet = new HashSet<>();
         checkAroundPiece(col, row, hashSet);
         return hashSet.size() == coordinates.size();
     }
 
-    /** Return the total number of moves that have been made (and not
-     *  retracted).  Each valid call to makeMove with a normal move increases
-     *  this number by 1. */
     private int movesMade() {
         return moves.size();
     }
-
-
-
-
 
     private Direction getDirection(Move move) {
         int c0 = move.getCol0();
@@ -212,7 +217,6 @@ public class Board implements Iterable<Move> {
         int tempR = r;
         while ((tempC >= 0 && tempR >= 0) && (tempC < M && tempR < M)) {
 
-
             if (get(tempC, tempR) != EMP) {
                 counter++;
             }
@@ -240,11 +244,7 @@ public class Board implements Iterable<Move> {
         int r0 = move.getRow0();
         int c1 = move.getCol1();
         int r1 = move.getRow1();
-
-
         if (get(c1, r1) == turn) {
-
-
             return true;
         }
         int deltaR = 0, deltaC = 0;
@@ -288,7 +288,7 @@ public class Board implements Iterable<Move> {
         { EMP, BP,  BP,  BP,  BP,  BP,  BP,  EMP }
     };
 
-    private final ArrayList<Move> moves = new ArrayList<>();
+    private final List<Move> moves = new ArrayList<>();
 
     private Piece turn;
 

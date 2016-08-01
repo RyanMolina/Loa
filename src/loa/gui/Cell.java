@@ -1,6 +1,7 @@
 package loa.gui;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**
@@ -20,7 +21,8 @@ public class Cell extends JButton {
 
     public void setHighlighted(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
-        setBackground((isHighlighted) ? Color.GREEN : this.color);
+        setBackground((isHighlighted) ? new Color(0xdedf58) : this.color);
+
     }
     public boolean isHighlighted() { return isHighlighted; };
     private int row;
