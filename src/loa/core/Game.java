@@ -53,7 +53,6 @@ public class Game extends JFrame implements ActionListener {
 
     private void assignPiece() {
         int n;
-
         do {
             Object[] options = {"Black", "White"};
             n = JOptionPane.showOptionDialog(null,
@@ -74,7 +73,6 @@ public class Game extends JFrame implements ActionListener {
             players[1] = new HumanPlayer(WP, this);
             players[0] = new MachinePlayer(BP, this);
         }
-
     }
 
     public Board getBoard() {

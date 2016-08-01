@@ -8,6 +8,8 @@ class MachinePlayer extends Player {
 
     int nodes;
 
+    Set<Move> bestMoves = new HashSet<>();
+
     MachinePlayer(Piece side, Game game) {
         super(side, game);
     }
@@ -20,6 +22,8 @@ class MachinePlayer extends Player {
     private Move iterativeDeepeningSearch(Board boardState) {
         Move result = null;
         nodes = 0;
+        if(bestMoves.size() > 72) bestMoves.clear();
+
         long start = System.currentTimeMillis() / 1000;
         for(int depth = 0; depth < Integer.MAX_VALUE; depth++) {
             result = minimaxDecision(boardState, depth);
@@ -32,7 +36,7 @@ class MachinePlayer extends Player {
     }
     private boolean isCutoff(long start, long end) {
         int time;
-        if(nodes > 5000000) time = 3;
+        if(nodes > 5000000) time = 0;
         else time = 1;
         return (end - start > time);
     }
@@ -45,12 +49,17 @@ class MachinePlayer extends Player {
         Move bestMove = null;
         while (root.hasNext()) {
             currMove = root.next();
+            if(bestMoves.contains(currMove)) {
+                continue;
+            }
             currVal = minValue(result(boardState, currMove), depth);
             if (currVal > bestVal) {
                 bestVal = currVal;
                 bestMove = currMove;
+                bestMoves.add(currMove);
             }
         }
+        bestMoves.add(bestMove);
         return bestMove;
     }
 

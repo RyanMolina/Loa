@@ -87,26 +87,6 @@ public class Board implements Iterable<Move> {
         turn = turn.opposite();
     }
 
-    public Move retract() {
-        Move move = null;
-        if(movesMade() != 0) {
-            move = moves.remove(moves.size() - 1);
-            Piece replaced = move.replacedPiece();
-            int c0 = move.getCol0(), c1 = move.getCol1();
-            int r0 = move.getRow0(), r1 = move.getRow1();
-            Piece movedPiece = move.movedPiece();
-            if(move.movedPiece() == BP) {
-                blackCoords.set(blackCoords.indexOf(new Point(r1, c1)), new Point(r0, c0));
-            } else if(move.movedPiece() == WP) {
-                whiteCoords.set(whiteCoords.indexOf(new Point(r1, c1)), new Point(r0, c0));
-            }
-            set(c1, r1, replaced);
-            set(c0, r0, movedPiece);
-            turn = turn.opposite();
-        }
-        return move;
-    }
-
     Piece turn() {
         return turn;
     }
