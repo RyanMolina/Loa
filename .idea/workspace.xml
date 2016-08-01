@@ -11,16 +11,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="db5fc1e7-4f68-42b6-b974-00f34b50215f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/loa/loa/core/Board$MoveIterator.class" afterPath="$PROJECT_DIR$/out/production/loa/loa/core/Board$MoveIterator.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/loa/loa/core/Board.class" afterPath="$PROJECT_DIR$/out/production/loa/loa/core/Board.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/loa/loa/core/Game.class" afterPath="$PROJECT_DIR$/out/production/loa/loa/core/Game.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/loa/loa/core/MachinePlayer.class" afterPath="$PROJECT_DIR$/out/production/loa/loa/core/MachinePlayer.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/loa/loa/core/Piece$1.class" afterPath="$PROJECT_DIR$/out/production/loa/loa/core/Piece$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/loa/loa/core/Piece.class" afterPath="$PROJECT_DIR$/out/production/loa/loa/core/Piece.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/loa/loa/gui/BoardPane$1.class" afterPath="$PROJECT_DIR$/out/production/loa/loa/gui/BoardPane$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/loa/loa/gui/BoardPane$2.class" afterPath="$PROJECT_DIR$/out/production/loa/loa/gui/BoardPane$2.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/loa/loa/gui/BoardPane.class" afterPath="$PROJECT_DIR$/out/production/loa/loa/gui/BoardPane.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/loa/core/Board.java" afterPath="$PROJECT_DIR$/src/loa/core/Board.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/loa/core/Game.java" afterPath="$PROJECT_DIR$/src/loa/core/Game.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/loa/gui/BoardPane.java" afterPath="$PROJECT_DIR$/src/loa/gui/BoardPane.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/loa/core/MachinePlayer.java" afterPath="$PROJECT_DIR$/src/loa/core/MachinePlayer.java" />
     </list>
     <ignored path="loa.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -80,11 +75,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MachinePlayer.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="MachinePlayer.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/loa/core/MachinePlayer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="139" column="5" selection-start-line="139" selection-start-column="5" selection-end-line="139" selection-end-column="5" />
+            <state relative-caret-position="374">
+              <caret line="32" column="45" selection-start-line="32" selection-start-column="45" selection-end-line="32" selection-end-column="45" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -92,10 +87,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Game.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Game.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/loa/core/Game.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-976">
+            <state relative-caret-position="-466">
               <caret line="44" column="13" selection-start-line="44" selection-start-column="13" selection-end-line="44" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -153,11 +148,11 @@
         <option value="$PROJECT_DIR$/src/loa/core/Move.java" />
         <option value="$PROJECT_DIR$/src/loa/Main.java" />
         <option value="$PROJECT_DIR$/src/loa/gui/Cell.java" />
-        <option value="$PROJECT_DIR$/src/loa/core/MachinePlayer.java" />
         <option value="$PROJECT_DIR$/src/loa/core/Piece.java" />
         <option value="$PROJECT_DIR$/src/loa/core/Board.java" />
         <option value="$PROJECT_DIR$/src/loa/gui/BoardPane.java" />
         <option value="$PROJECT_DIR$/src/loa/core/Game.java" />
+        <option value="$PROJECT_DIR$/src/loa/core/MachinePlayer.java" />
       </list>
     </option>
   </component>
@@ -552,7 +547,14 @@
       <option name="project" value="LOCAL" />
       <updated>1470019285763</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Minimax Iterative Deepening">
+      <created>1470020278414</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1470020278414</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -906,16 +908,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/loa/core/MachinePlayer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="139" column="5" selection-start-line="139" selection-start-column="5" selection-end-line="139" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/loa/core/Board.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1326">
@@ -928,8 +920,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/loa/core/Game.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-976">
+        <state relative-caret-position="-466">
           <caret line="44" column="13" selection-start-line="44" selection-start-column="13" selection-end-line="44" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/loa/core/MachinePlayer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="32" column="45" selection-start-line="32" selection-start-column="45" selection-end-line="32" selection-end-column="45" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

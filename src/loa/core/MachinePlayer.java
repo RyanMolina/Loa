@@ -23,13 +23,20 @@ class MachinePlayer extends Player {
         long start = System.currentTimeMillis() / 1000;
         for(int depth = 0; depth < Integer.MAX_VALUE; depth++) {
             result = minimaxDecision(boardState, depth);
-            if((System.currentTimeMillis() / 1000) - start > 2) {
+            if(isCutoff(System.currentTimeMillis() / 1000, start)) {
                 System.out.println(depth + " Nodes: " + nodes);
                 break;
             }
         }
         return result;
     }
+    private boolean isCutoff(long start, long end) {
+        int time;
+        if(nodes > 5000000) time = 5;
+        else time = 2;
+        return (end - start > time);
+    }
+
     private Move minimaxDecision(Board boardState, int depth) {
         Iterator<Move> root = boardState.legalMoves();
         int currVal = 0;
