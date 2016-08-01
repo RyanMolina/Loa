@@ -1,11 +1,9 @@
 package loa.core;
 
-import jdk.nashorn.internal.scripts.JO;
 import loa.gui.BoardPane;
 import loa.gui.Cell;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +11,7 @@ import java.util.List;
 import static loa.core.Board.M;
 import static loa.core.Piece.*;
 
-public class Game extends JFrame implements ActionListener{
+public class Game extends JFrame implements ActionListener {
 
 
     private Board board;
