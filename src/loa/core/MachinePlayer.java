@@ -36,7 +36,7 @@ class MachinePlayer extends Player {
     }
     private boolean isCutoff(long start, long end) {
         int time;
-        if(nodes > 5000000) time = 0;
+        if(nodes > 1000000) time = 0;
         else time = 1;
         return (end - start > time);
     }
@@ -56,7 +56,6 @@ class MachinePlayer extends Player {
             if (currVal > bestVal) {
                 bestVal = currVal;
                 bestMove = currMove;
-                bestMoves.add(currMove);
             }
         }
         bestMoves.add(bestMove);
