@@ -43,20 +43,6 @@ public class Game extends JFrame implements ActionListener {
                     b.addActionListener(this);
                 }
             }
-            boardPane.getNewBtn().addActionListener(e-> {
-                board.newGame();
-                boardPane.update(board.getState());
-            });
-            boardPane.getUndoBtn().addActionListener(e-> {
-                Move move = board.retract();
-                if(move != null)  {
-                    boardPane.undo(move);
-                }
-                move = board.retract();
-                if(move != null)  {
-                    boardPane.undo(move);
-                }
-            });
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setLocationByPlatform(true);
             pack();
@@ -111,13 +97,11 @@ public class Game extends JFrame implements ActionListener {
                 int playerInd = board.turn().ordinal();
                 next = null;
                 if (players[playerInd] instanceof HumanPlayer) {
-                    boardPane.setMessage(" Your turn");
+                    boardPane.setMessage(" Your turn  ");
                     showPlayerMoves = true;
                 } else {
                     boardPane.setMessage(" Thinking...");
                 }
-                boardPane.getNewBtn().setEnabled(players[playerInd] instanceof HumanPlayer);
-                boardPane.getUndoBtn().setEnabled(players[playerInd] instanceof HumanPlayer);
                 next = players[playerInd].makeMove();
                 board.makeMove(next);
                 boardPane.insert(next);

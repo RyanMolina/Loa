@@ -2,7 +2,6 @@ package loa.core;
 
 
 import java.awt.Point;
-import java.lang.reflect.Array;
 import java.util.*;
 import static loa.core.Piece.*;
 import static loa.core.Direction.*;

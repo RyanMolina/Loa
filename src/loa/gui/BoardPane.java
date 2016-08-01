@@ -6,7 +6,6 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import loa.core.Move;
@@ -22,10 +21,7 @@ public class BoardPane extends JPanel {
 
     private Cell[][] boardSquares = new Cell[8][8];
     private JPanel board = new JPanel(new GridLayout(0, 9));
-    private JToolBar commands = new JToolBar();
 
-    private JButton newBtn = new JButton("New Game");
-    private JButton undoBtn = new JButton("Undo");
     private JLabel message = new JLabel("", SwingConstants.CENTER);
     private static final String COLS = "ABCDEFGH";
 
@@ -37,14 +33,12 @@ public class BoardPane extends JPanel {
         message.setText(s);
     }
     public void init() {
-        setLayout(new BorderLayout());
+
         setBorder(new EmptyBorder(5, 5, 5, 5));
-        commands.setFloatable(false);
-        commands.add(newBtn);
-        commands.add(undoBtn);
-        commands.add(message);
-        message.setFont(new Font("Serif", Font.BOLD,32));
-        add(commands, BorderLayout.PAGE_START);
+
+
+
+
 
 
         board = new JPanel(new GridLayout(0, 9)) {
@@ -104,7 +98,8 @@ public class BoardPane extends JPanel {
                 }
             }
         }
-
+        add(message);
+        message.setFont(new Font("Serif", Font.BOLD, 32));
 
     }
 
@@ -161,11 +156,6 @@ public class BoardPane extends JPanel {
             c.setHighlighted(!c.isHighlighted());
         }
     }
-    public JButton getNewBtn() {
-        return newBtn;
-    }
-    public JButton getUndoBtn() {
-        return undoBtn;
-    }
+
 
 }
