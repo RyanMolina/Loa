@@ -21,25 +21,12 @@ class MachinePlayer extends Player {
 
     private Move iterativeDeepeningSearch(Board boardState) {
         Move result = null;
-        nodes = 0;
-        if(bestMoves.size() > 72) bestMoves.clear();
 
-        long start = System.currentTimeMillis() / 1000;
-        for(int depth = 0; depth < Integer.MAX_VALUE; depth++) {
-            result = minimaxDecision(boardState, depth);
-            if(isCutoff(start, System.currentTimeMillis() / 1000)) {
-                System.out.println(depth + " Nodes: " + nodes);
-                break;
-            }
-        }
+        result = minimaxDecision(boardState, 2);
+
         return result;
     }
-    private boolean isCutoff(long start, long end) {
-        int time;
-        if(nodes > 1000000) time = 0;
-        else time = 1;
-        return (end - start > time);
-    }
+
 
     private Move minimaxDecision(Board boardState, int depth) {
         Iterator<Move> root = boardState.legalMoves();

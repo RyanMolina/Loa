@@ -82,15 +82,15 @@ public class Game extends JFrame implements ActionListener {
     Move getMove() {
         while(next == null) {
             try {
-                Thread.sleep(100);}
-            catch (InterruptedException e) {}
+                Thread.sleep(10);
+            } catch (InterruptedException e) {}
         }
         return next;
     }
 
     public void play() {
-
-        while (true) {
+        boolean inGame = true;
+        while (inGame) {
             if(!board.gameOver()) {
                 int playerInd = board.turn().ordinal();
                 next = null;
@@ -105,6 +105,7 @@ public class Game extends JFrame implements ActionListener {
                 boardPane.insert(next);
                 showPlayerMoves = false;
             } else {
+                inGame = false;
                 announceWinner();
             }
         }
