@@ -24,11 +24,18 @@ public class Cell extends JButton {
         setBackground((isHighlighted) ? new Color(0xdedf58) : this.color);
 
     }
-    public boolean isHighlighted() { return isHighlighted; };
+
+
+    public boolean isHighlighted() {
+        return isHighlighted;
+    };
+
+
     private int row;
     private int col;
     private Color color;
     private boolean isHighlighted;
+
 
     public Cell(int row, int col, Color color) {
         this.row = row;

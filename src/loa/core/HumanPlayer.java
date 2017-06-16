@@ -1,6 +1,6 @@
 package loa.core;
 
-class HumanPlayer extends Player {
+class HumanPlayer extends Player{
 
     HumanPlayer(Piece side, Game game) {
         super(side, game);

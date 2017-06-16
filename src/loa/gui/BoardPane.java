@@ -18,28 +18,36 @@ import loa.core.Piece;
  */
 public class BoardPane extends JPanel {
 
+    private String[] algorithms = {"Iterative Deepening", "Minimax", "AlphaBeta"};
 
     private Cell[][] boardSquares = new Cell[8][8];
     private JPanel board = new JPanel(new GridLayout(0, 9));
 
     private JLabel message = new JLabel("", SwingConstants.CENTER);
+
+    private JComboBox algorithmComboBox = new JComboBox(algorithms);
+
     private static final String COLS = "ABCDEFGH";
 
 
     public BoardPane() {
         init();
     }
+
+
     public void setMessage(String s) {
         message.setText(s);
     }
+
+
     public void init() {
 
         setBorder(new EmptyBorder(5, 5, 5, 5));
+        setLayout(new BorderLayout());
 
 
-
-
-
+        algorithmComboBox.setSelectedIndex(0);
+        add(algorithmComboBox, BorderLayout.NORTH);
 
         board = new JPanel(new GridLayout(0, 9)) {
             @Override
@@ -63,9 +71,12 @@ public class BoardPane extends JPanel {
                 return new Dimension(s, s);
             }
         };
+
+
         add(board, BorderLayout.CENTER);
 
         board.setBorder(new CompoundBorder(new EmptyBorder(18, 18, 18, 18), new LineBorder(Color.BLACK)));
+
         for(int row = 7; row >= 0; row--) {
             for (int col = 0; col < boardSquares[row].length; col++) {
                 Cell b;
@@ -80,12 +91,15 @@ public class BoardPane extends JPanel {
                 boardSquares[row][col] = b;
             }
         }
+
+
         board.add(new JLabel(""));
 
         for(int i = 0; i < 8; i++) {
             board.add(new JLabel("" + COLS.charAt(i), SwingConstants.CENTER)).
                     setFont(new Font("Serif", Font.BOLD, 24));
         }
+
         for (int row = 7; row >= 0; row--) {
             for (int col = 0; col < 8; col++) {
                 switch (col) {
@@ -98,7 +112,7 @@ public class BoardPane extends JPanel {
                 }
             }
         }
-        add(message);
+        add(message, BorderLayout.SOUTH);
         message.setFont(new Font("Serif", Font.BOLD, 32));
 
     }
@@ -108,6 +122,12 @@ public class BoardPane extends JPanel {
     public Cell[][] getBoardSquares() {
         return boardSquares;
     }
+
+
+    public JComboBox getAlgorithmComboBox() {
+        return this.algorithmComboBox;
+    }
+
 
     public void update(Piece[][] p) {
         //Update Board
@@ -121,6 +141,7 @@ public class BoardPane extends JPanel {
             }
         }
     }
+
 
     public void insert(Move move) {
         switch(move.movedPiece()) {
@@ -136,6 +157,8 @@ public class BoardPane extends JPanel {
             }
         }
     }
+
+
     public void undo(Move move) {
         switch(move.movedPiece()) {
             case BP: {
@@ -150,6 +173,8 @@ public class BoardPane extends JPanel {
             }
         }
     }
+
+
     public void showLegalMoves(List<Move> legalMoves){
         for(Move m : legalMoves) {
             Cell c = boardSquares[m.getRow1()][m.getCol1()];

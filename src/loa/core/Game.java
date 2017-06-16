@@ -8,36 +8,42 @@ import java.awt.event.*;
 import java.util.LinkedList;
 import java.util.List;
 
-import static loa.core.Board.M;
+import static loa.core.Board.SIZE;
 import static loa.core.Piece.*;
 
 public class Game extends JFrame implements ActionListener {
 
-
     private Board board;
-
     private Player[] players = new Player[2];
+
+    private List<Move> legalMoves;
+    private Move next;
+    private boolean showPlayerMoves;
 
     private BoardPane boardPane;
 
-    private List<Move> legalMoves;
-
-    private Move next;
-
-    private boolean showPlayerMoves;
-
     public Game() {
+        setTitle("Lines of Action");
 
         players = new Player[2];
+
         assignPiece();
         legalMoves = new LinkedList<>();
         board = new Board();
-        boardPane = new BoardPane();
 
+
+        boardPane = new BoardPane();
+        boardPane.getAlgorithmComboBox().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComboBox cb = (JComboBox) e.getSource();
+                ((MachinePlayer) players[1]).setAlgorithm((String)cb.getSelectedItem());
+            }
+        });
         SwingUtilities.invokeLater(() -> {
             boardPane.update(board.getState());
             add(boardPane);
-            for(int i = M-1; i >= 0; i--) {
+            for(int i = SIZE -1; i >= 0; i--) {
                 for(int j = 0; j < boardPane.getBoardSquares()[i].length; j++) {
                     Cell b = boardPane.getBoardSquares()[i][j];
                     b.addActionListener(this);
@@ -49,13 +55,18 @@ public class Game extends JFrame implements ActionListener {
             setMinimumSize(getSize());
             setVisible(true);
         });
+
+
     }
 
+
     private void assignPiece() {
-        int n;
+
+        int selectedPiece;
+
         do {
             Object[] options = {"Black", "White"};
-            n = JOptionPane.showOptionDialog(null,
+            selectedPiece = JOptionPane.showOptionDialog(null,
                     "Your Piece",
                     "Choose",
                     JOptionPane.YES_NO_CANCEL_OPTION,
@@ -64,9 +75,12 @@ public class Game extends JFrame implements ActionListener {
                     options,
                     options[1]);
 
-        } while (n == JOptionPane.CLOSED_OPTION);
+        } while (selectedPiece == JOptionPane.CLOSED_OPTION);
 
-        if(n == BP.ordinal()) {
+        JOptionPane.showMessageDialog(null, "Just use Iterative Deepening, since the long running recursive calls " +
+                "of Minimax and AlphaBeta Pruning throws stackoverflow error");
+
+        if(selectedPiece == BP.ordinal()) {
             players[0] = new HumanPlayer(BP, this);
             players[1] = new MachinePlayer(WP, this);
         } else {
@@ -75,63 +89,75 @@ public class Game extends JFrame implements ActionListener {
         }
     }
 
+
     public Board getBoard() {
         return board;
     }
 
-    Move getMove() {
+    /**
+     * Wait for the next move.
+     * @return
+     */
+    public Move getMove() {
         while(next == null) {
             try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {}
+                Thread.sleep(100);}
+            catch (InterruptedException e) {}
         }
         return next;
     }
 
+    /**
+     * Game Loop
+     */
     public void play() {
-        boolean inGame = true;
-        while (inGame) {
+        while (true) {
             if(!board.gameOver()) {
-                int playerInd = board.turn().ordinal();
+                int playerInd = board.getTurn().ordinal();
                 next = null;
                 if (players[playerInd] instanceof HumanPlayer) {
-                    boardPane.setMessage(" Your turn  ");
+                    boardPane.setMessage("Your turn  ");
                     showPlayerMoves = true;
                 } else {
-                    boardPane.setMessage(" Thinking...");
+                    boardPane.setMessage("Thinking...");
                 }
                 next = players[playerInd].makeMove();
                 board.makeMove(next);
                 boardPane.insert(next);
                 showPlayerMoves = false;
             } else {
-                inGame = false;
                 announceWinner();
             }
         }
-
     }
 
+
     private void announceWinner() {
-        if (board.gameOver()) {
-            Piece piece;
-            boolean white = board.piecesContiguous(Piece.WP);
-            boolean black = board.piecesContiguous(Piece.BP);
-            if (white && black) {
-                piece = board.turn().opposite();
-                if (piece == BP) {
-                    boardPane.setMessage(" Black wins");
-                } else {
-                    boardPane.setMessage(" White wins");
-                }
-            } else if (black) {
+        Piece piece;
+        boolean white = board.piecesContiguous(Piece.WP);
+        boolean black = board.piecesContiguous(Piece.BP);
+        /**
+         * If the last move make both sides win, the last one who made the move gets to win.
+         */
+        if (white && black) {
+            piece = board.getTurn().opposite();
+            if (piece == BP) {
                 boardPane.setMessage(" Black wins");
             } else {
                 boardPane.setMessage(" White wins");
             }
+        } else if (black) {
+            boardPane.setMessage(" Black wins");
+        } else {
+            boardPane.setMessage(" White wins");
         }
+
     }
 
+    /**
+     * Highlight the legal moves of the selected piece.
+     * @param e
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if(showPlayerMoves) {
@@ -149,7 +175,7 @@ public class Game extends JFrame implements ActionListener {
             Move move;
             while (dir != null) {
                 move = Move.create(b.getCol(), b.getRow(), board.pieceCountAlong(b.getCol(), b.getRow(), dir), dir, board);
-                dir = dir.succ();
+                dir = dir.next();
 
                 if (board.isLegal(move)) {
                     legalMoves.add(move);

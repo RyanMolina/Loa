@@ -3,16 +3,18 @@ package loa.core;
 
 public enum Piece {
 
-    BP, WP, EMP;
+    BP,
+    WP,
+    EMP;
 
-    Piece opposite() {
+    public Piece opposite() {
         switch (this) {
-        case BP:
-            return WP;
-        case WP:
-            return BP;
-        default:
-            return null;
+            case BP:
+                return WP;
+            case WP:
+                return BP;
+            default:
+                return EMP;
         }
     }
 }

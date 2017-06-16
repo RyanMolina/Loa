@@ -1,33 +1,30 @@
 package loa.core;
 
 import static loa.core.Piece.EMP;
-import static loa.core.Board.M;
+import static loa.core.Board.SIZE;
 
 public class Move {
 
 
 
-    static Move create(int column0, int row0, int column1, int row1, Board board) {
-
-
+    public static Move create(int column0, int row0, int column1, int row1, Board board) {
         if (!inBounds(column0, row0) || !inBounds(column1, row1)) {
             return null;
         }
         int moved = board.get(column0, row0).ordinal();
         int replaced = board.get(column1, row1).ordinal();
         if(moved == EMP.ordinal()) return null;
+
         return moves[column0][row0][column1][row1][moved][replaced];
     }
 
 
-    static Move create(int column0, int row0, int k, Direction dir, Board board) {
-
+    public static Move create(int column0, int row0, int k, Direction dir, Board board) {
         return create(column0, row0, column0 + dir.dc * k, row0 + dir.dr * k,
                       board);
     }
 
     private Move(int col0, int row0, int col1, int row1, Piece moved, Piece replaced) {
-
         this.col0 = col0;
         this.row0 = row0;
         this.col1 = col1;
@@ -67,7 +64,7 @@ public class Move {
     }
 
     private static boolean inBounds(int c, int r) {
-        return 0 <= c && c < M &&  0 <= r && r < M;
+        return 0 <= c && c < SIZE &&  0 <= r && r < SIZE;
     }
 
 
@@ -79,7 +76,7 @@ public class Move {
 
     private final Piece replaced;
 
-    private static Move[][][][][][] moves = new Move[M + 1][M + 1][M + 1][M + 1][2][3];
+    private static Move[][][][][][] moves = new Move[SIZE + 1][SIZE + 1][SIZE + 1][SIZE + 1][2][3];
 
     static {
         for (int m = 0; m < 2; m++) {
@@ -88,18 +85,18 @@ public class Move {
                 if (pm == pr || pm == EMP) {
                     continue;
                 }
-                for (int r0 = 0; r0 < M; r0++) {
-                    for (int c0 = 0; c0 < M; c0++) {
-                        for (int k = 0; k < M; k++) {
+                for (int r0 = 0; r0 < SIZE; r0++) {
+                    for (int c0 = 0; c0 < SIZE; c0++) {
+                        for (int k = 0; k < SIZE; k++) {
                             if (k != r0) {
                                 moves[c0][r0][c0][k][m][r] = new Move(c0, r0, c0, k, pm, pr);
-                                if ((char) (c0 - r0 + k - 1) < M) {
+                                if ((char) (c0 - r0 + k - 1) < SIZE) {
                                     moves[c0][r0][c0 - r0 + k][k][m][r] = new Move(c0, r0, c0 - r0 + k, k, pm, pr);
                                 }
                             }
                             if (k != c0) {
                                 moves[c0][r0][k][r0][m][r] = new Move(c0, r0, k, r0, pm, pr);
-                                if ((char) (c0 + r0 - k) < M) {
+                                if ((char) (c0 + r0 - k) < SIZE) {
                                     moves[c0][r0][k][c0 + r0 - k][m][r] = new Move(c0, r0, k, c0 + r0 - k,
                                                    pm, pr);
                                 }
