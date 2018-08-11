@@ -1,3 +1,3 @@
-## Lines of Action Board Game (Machine Problem in AI class)
+## Lines of Action Board Game
 ### Using Minimax Algorithm
 ![Minimax Illustration](https://upload.wikimedia.org/wikipedia/commons/e/e1/Plminmax.gif)
