@@ -1,5 +1,12 @@
 package loa.core;
 
+import loa.core.board.Board;
+import loa.core.board.Direction;
+import loa.core.board.Move;
+import loa.core.board.Piece;
+import loa.core.player.HumanPlayer;
+import loa.core.player.MachinePlayer;
+import loa.core.player.Player;
 import loa.gui.BoardPane;
 import loa.gui.Cell;
 
@@ -8,13 +15,13 @@ import java.awt.event.*;
 import java.util.LinkedList;
 import java.util.List;
 
-import static loa.core.Board.SIZE;
-import static loa.core.Piece.*;
+import static loa.core.board.Board.SIZE;
+import static loa.core.board.Piece.*;
 
-public class Game extends JFrame implements ActionListener {
+public class GameFrame extends JFrame implements ActionListener {
 
     private Board board;
-    private Player[] players = new Player[2];
+    private Player[] players;
 
     private List<Move> legalMoves;
     private Move next;
@@ -22,8 +29,9 @@ public class Game extends JFrame implements ActionListener {
 
     private BoardPane boardPane;
 
-    public Game() {
+    public GameFrame() {
         setTitle("Lines of Action");
+        setResizable(false);
 
         players = new Player[2];
 
@@ -49,7 +57,7 @@ public class Game extends JFrame implements ActionListener {
                     b.addActionListener(this);
                 }
             }
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             setLocationByPlatform(true);
             pack();
             setMinimumSize(getSize());
@@ -70,15 +78,18 @@ public class Game extends JFrame implements ActionListener {
                     "Your Piece",
                     "Choose",
                     JOptionPane.YES_NO_CANCEL_OPTION,
-                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
                     null,
                     options,
                     options[1]);
 
         } while (selectedPiece == JOptionPane.CLOSED_OPTION);
 
-        JOptionPane.showMessageDialog(null, "Just use Iterative Deepening, since the long running recursive calls " +
-                "of Minimax and AlphaBeta Pruning throws stackoverflow error");
+        JOptionPane.showMessageDialog(
+                null,
+                "Just use Iterative Deepening, since the long running " +
+                        "recursive calls of Minimax and AlphaBeta Pruning throws " +
+                        "stackoverflow error");
 
         if(selectedPiece == BP.ordinal()) {
             players[0] = new HumanPlayer(BP, this);
@@ -96,49 +107,47 @@ public class Game extends JFrame implements ActionListener {
 
     /**
      * Wait for the next move.
-     * @return
+     * @return Move
      */
     public Move getMove() {
         while(next == null) {
             try {
                 Thread.sleep(100);}
-            catch (InterruptedException e) {}
+            catch (InterruptedException ignored) {}
         }
         return next;
     }
 
     /**
-     * Game Loop
+     * GameFrame Loop
      */
     public void play() {
-        while (true) {
-            if(!board.gameOver()) {
-                int playerInd = board.getTurn().ordinal();
-                next = null;
-                if (players[playerInd] instanceof HumanPlayer) {
-                    boardPane.setMessage("Your turn  ");
-                    showPlayerMoves = true;
-                } else {
-                    boardPane.setMessage("Thinking...");
-                }
-                next = players[playerInd].makeMove();
-                board.makeMove(next);
-                boardPane.insert(next);
-                showPlayerMoves = false;
+        while (!board.gameOver()) {
+            int playerInd = board.getTurn().ordinal();
+            next = null;
+            if (players[playerInd] instanceof HumanPlayer) {
+                boardPane.setMessage("Your turn  ");
+                showPlayerMoves = true;
             } else {
-                announceWinner();
+                boardPane.setMessage("Thinking...");
             }
+            next = players[playerInd].makeMove();
+            board.makeMove(next);
+            boardPane.insert(next);
+            showPlayerMoves = false;
         }
+        announceWinner();
     }
 
-
+    /**
+     * If the last move make both sides win,
+     * the last one who made the move gets to win.
+     */
     private void announceWinner() {
         Piece piece;
         boolean white = board.piecesContiguous(Piece.WP);
         boolean black = board.piecesContiguous(Piece.BP);
-        /**
-         * If the last move make both sides win, the last one who made the move gets to win.
-         */
+
         if (white && black) {
             piece = board.getTurn().opposite();
             if (piece == BP) {
@@ -156,7 +165,7 @@ public class Game extends JFrame implements ActionListener {
 
     /**
      * Highlight the legal moves of the selected piece.
-     * @param e
+     * @param e - ActionEvent when a cell is clicked.
      */
     @Override
     public void actionPerformed(ActionEvent e) {

@@ -1,6 +1,6 @@
 package loa.core;
 
-import loa.minimax.AbstractGame;
+import loa.minimax.AbstractBoard;
 
 import java.util.*;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 import static loa.core.Piece.*;
 import static loa.core.Direction.*;
 
-public class Board extends AbstractGame<Piece, Move, Board> implements Iterable<Move> {
+public class Board extends AbstractBoard<Piece, Move, Board> implements Iterable<Move> {
 
     public static final int SIZE = 8;
 
@@ -390,27 +390,27 @@ public class Board extends AbstractGame<Piece, Move, Board> implements Iterable<
         }
     }
 
-	public static int evaluator(Board board) {
-		List<Coordinates> coordinates = board.arrayofCoordinates(board.getTurn());
+	public int evaluator() {
+		List<Coordinates> coordinates = arrayofCoordinates(getTurn());
 		int col = coordinates.get(0).getX();
 		int row = coordinates.get(0).getY();
 		Set<Coordinates> hashSet = new HashSet<>();
-		int value = board.checkAroundPiece(col, row, hashSet) * 1000;
+		int value = this.checkAroundPiece(col, row, hashSet) * 1000;
 
-		List<Coordinates> humanCoords = board.arrayofCoordinates(board.getTurn());
-		List<Coordinates> machineCoords = board.arrayofCoordinates(board.getTurn().opposite());
-		int humanVal = Board.concentration(board, board.getTurn()) + Board.centralisation(humanCoords);
-		int machineVal = Board.concentration(board, board.getTurn().opposite()) + Board.centralisation(machineCoords);
+		List<Coordinates> humanCoords = arrayofCoordinates(getTurn());
+		List<Coordinates> machineCoords = arrayofCoordinates(getTurn().opposite());
+		int humanVal = concentration(getTurn()) + centralisation(humanCoords);
+		int machineVal = concentration(getTurn().opposite()) + centralisation(machineCoords);
 		value  += humanVal + machineVal;
 		return value;
 	}
 
-    public static int concentration(Board board, Piece side) {
+    public int concentration(Piece side) {
         int centerR = 0;
         int centerC = 0;
         int count = 0;
         List<Coordinates> pieceCoords = new ArrayList<>();
-        Piece[][] state = board.getState();
+        Piece[][] state = getState();
         for(int i = 0; i < Board.SIZE; i++) {
             for(int j = 0; j < Board.SIZE; j++) {
                 if (state[i][j] == side) {
@@ -438,7 +438,7 @@ public class Board extends AbstractGame<Piece, Move, Board> implements Iterable<
     }
 
 
-    public static int centralisation(List<Coordinates> pieces) {
+    public int centralisation(List<Coordinates> pieces) {
         int[][] pieceSquareTable = {{-80, -25, -20, -20, -20, -20, -25, -80},
                 {-25,  10,  10,  10,  10,  10,  10, -25},
                 {-20,  10,  25,  25,  25,  25,  10, -20},
