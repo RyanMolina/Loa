@@ -1,27 +1,23 @@
 package loa.minimax;
 
-import loa.core.Board;
-import loa.core.Game;
-import loa.core.Move;
-
 import java.util.Iterator;
 
 /**
  *
- * @param <S> type of Game Tree
+ * @param <G> type of Game Tree
  * @param <M> type of Action/Move
  */
-public abstract class AbstractAlphaBeta<S extends AbstractGame, M> implements AdversarialSearch<Board, Move> {
+public abstract class AbstractAlphaBeta<G extends AbstractGame, M> implements AdversarialSearch<G, M> {
 
-	protected M alphaBeta(S boardState) {
-		Iterator<M> root = boardState.getLegalMoves();
-		int currVal = 0;
+	protected M alphaBeta(G game) {
+		Iterator<M> root = game.getLegalMoves();
+		int currVal;
 		int bestVal = Integer.MIN_VALUE;
 		M currMove;
 		M bestMove = null;
 		while (root.hasNext()) {
 			currMove = root.next();
-			currVal = max(getChild(boardState, currMove), Integer.MIN_VALUE, Integer.MAX_VALUE);
+			currVal = max(getChild(game, currMove), Integer.MIN_VALUE, Integer.MAX_VALUE);
 			if (currVal > bestVal) {
 				bestVal = currVal;
 				bestMove = currMove;
@@ -31,15 +27,15 @@ public abstract class AbstractAlphaBeta<S extends AbstractGame, M> implements Ad
 	}
 
 
-	protected int min(S boardState, int alpha, int beta) {
-		boolean isTerminalState = boardState.isTerminalState(boardState.getTurn());
+	private int min(G game, int alpha, int beta) {
+		boolean isTerminalState = game.isTerminalState(game.getTurn());
 		if(isTerminalState) {
-			return eval(boardState);
+			return eval(game);
 		}
 		int value = Integer.MAX_VALUE;
-		Iterator<M> actions = boardState.getLegalMoves();
+		Iterator<M> actions = game.getLegalMoves();
 		while(actions.hasNext()) {
-			value = Integer.min(value, max(getChild(boardState, actions.next()), alpha, beta));
+			value = Integer.min(value, max(getChild(game, actions.next()), alpha, beta));
 			beta = Integer.min(beta, value);
 			if(beta <= alpha) {
 				break;
@@ -49,15 +45,15 @@ public abstract class AbstractAlphaBeta<S extends AbstractGame, M> implements Ad
 	}
 
 
-	protected int max(S boardState, int alpha, int beta) {
-		boolean isTerminalState = boardState.isTerminalState(boardState.getTurn());
+	private int max(G game, int alpha, int beta) {
+		boolean isTerminalState = game.isTerminalState(game.getTurn());
 		if(isTerminalState) {
-			return eval(boardState);
+			return eval(game);
 		}
 		int value = Integer.MIN_VALUE;
-		Iterator<M> actions = boardState.getLegalMoves();
+		Iterator<M> actions = game.getLegalMoves();
 		while(actions.hasNext()) {
-			value = Integer.max(value, min(getChild(boardState, actions.next()), alpha, beta));
+			value = Integer.max(value, min(getChild(game, actions.next()), alpha, beta));
 			alpha = Integer.max(alpha, value);
 			if(beta <= alpha) {
 				break;
@@ -66,6 +62,6 @@ public abstract class AbstractAlphaBeta<S extends AbstractGame, M> implements Ad
 		return value;
 	}
 
-	protected abstract S getChild(S boardState, M action);
-	protected abstract int eval(S boardState);
+	protected abstract G getChild(G boardState, M action);
+	protected abstract int eval(G boardState);
 }

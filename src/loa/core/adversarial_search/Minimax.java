@@ -1,11 +1,8 @@
-package loa.core;
+package loa.core.adversarial_search;
 
-import loa.core.Board;
-import loa.core.Coordinates;
-import loa.core.Move;
+import loa.core.board.Board;
+import loa.core.board.Move;
 import loa.minimax.AbstractMinimax;
-
-import java.util.*;
 
 /**
  * Created by ryang on 15/06/2017.
@@ -28,7 +25,7 @@ public class Minimax extends AbstractMinimax<Board, Move> {
 
 	@Override
 	protected int eval(Board board) {
-		return Board.evaluator(board);
+		return board.evaluator();
 	}
 
 

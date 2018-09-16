@@ -1,14 +1,19 @@
-package loa.core;
+package loa.core.player;
 
+import loa.core.Game;
+import loa.core.board.Board;
+import loa.core.board.Move;
+import loa.core.board.Piece;
+import loa.core.adversarial_search.AdversarialSearchFactory;
 import loa.minimax.AdversarialSearch;
 
 
-class MachinePlayer extends Player {
+public class MachinePlayer extends Player {
 
 	private AdversarialSearch<Board, Move> adversarialSearch;
 	private AdversarialSearchFactory adversarialSearchFactory;
 
-    protected MachinePlayer(Piece side, Game game) {
+    public MachinePlayer(Piece side, Game game) {
         super(side, game);
         adversarialSearchFactory = new AdversarialSearchFactory();
 		setAlgorithm("Iterative Deepening");

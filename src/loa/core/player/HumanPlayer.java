@@ -1,8 +1,12 @@
-package loa.core;
+package loa.core.player;
 
-class HumanPlayer extends Player{
+import loa.core.Game;
+import loa.core.board.Move;
+import loa.core.board.Piece;
 
-    HumanPlayer(Piece side, Game game) {
+public class HumanPlayer extends Player {
+
+    public HumanPlayer(Piece side, Game game) {
         super(side, game);
     }
 

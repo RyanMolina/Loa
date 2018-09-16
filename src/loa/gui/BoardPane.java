@@ -8,8 +8,8 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
-import loa.core.Move;
-import loa.core.Piece;
+import loa.core.board.Move;
+import loa.core.board.Piece;
 
 
 
@@ -21,11 +21,10 @@ public class BoardPane extends JPanel {
     private String[] algorithms = {"Iterative Deepening", "Minimax", "AlphaBeta"};
 
     private Cell[][] boardSquares = new Cell[8][8];
-    private JPanel board = new JPanel(new GridLayout(0, 9));
 
     private JLabel message = new JLabel("", SwingConstants.CENTER);
 
-    private JComboBox algorithmComboBox = new JComboBox(algorithms);
+    private JComboBox<String> algorithmComboBox = new JComboBox<>(algorithms);
 
     private static final String COLS = "ABCDEFGH";
 
@@ -40,7 +39,7 @@ public class BoardPane extends JPanel {
     }
 
 
-    public void init() {
+    private void init() {
 
         setBorder(new EmptyBorder(5, 5, 5, 5));
         setLayout(new BorderLayout());
@@ -49,15 +48,15 @@ public class BoardPane extends JPanel {
         algorithmComboBox.setSelectedIndex(0);
         add(algorithmComboBox, BorderLayout.NORTH);
 
-        board = new JPanel(new GridLayout(0, 9)) {
+        JPanel board = new JPanel(new GridLayout(0, 9)) {
             @Override
             public final Dimension getPreferredSize() {
                 Dimension d = super.getPreferredSize();
                 Component c = getParent();
                 Dimension prefSize = null;
 
-                if(c == null) {
-                    prefSize = new Dimension((int)d.getWidth(), (int)d.getHeight());
+                if (c == null) {
+                    prefSize = new Dimension((int) d.getWidth(), (int) d.getHeight());
                 } else if (c.getWidth() > d.getWidth() && c.getHeight() > d.getHeight()) {
                     prefSize = c.getSize();
                 } else {

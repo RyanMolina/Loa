@@ -1,5 +1,7 @@
-package loa.core;
+package loa.core.adversarial_search;
 
+import loa.core.board.Board;
+import loa.core.board.Move;
 import loa.minimax.AdversarialSearch;
 
 /**
@@ -13,7 +15,7 @@ public class AdversarialSearchFactory {
 			case "AlphaBeta":
 				return new AlphaBetaPruning();
 			default:
-				return new IterativeDeepening(4);
+				return new IterativeDeepening(2);
 		}
 	}
 }

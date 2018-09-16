@@ -2,11 +2,7 @@ package loa.minimax;
 
 import java.util.Iterator;
 
-/**
- *
- * @param <S> type of Game Tree
- * @param <M> type of Action/Move
- */
+
 public abstract class AbstractMinimax<S extends AbstractGame, M> implements AdversarialSearch<S, M> {
 
 	protected M minimax(S boardState) {
@@ -26,7 +22,7 @@ public abstract class AbstractMinimax<S extends AbstractGame, M> implements Adve
 		return bestMove;
 	}
 
-	protected int min(S boardState) {
+	private int min(S boardState) {
 		boolean isTerminalState = boardState.isTerminalState(boardState.getTurn());
 		if(isTerminalState) {
 			return eval(boardState);
@@ -39,7 +35,7 @@ public abstract class AbstractMinimax<S extends AbstractGame, M> implements Adve
 		return value;
 	}
 
-	protected int max(S boardState) {
+	private int max(S boardState) {
 		boolean isTerminalState = boardState.isTerminalState(boardState.getTurn());
 		if(isTerminalState) {
 			return eval(boardState);

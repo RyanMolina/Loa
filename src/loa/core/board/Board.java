@@ -1,14 +1,22 @@
-package loa.core;
+package loa.core.board;
 
-import loa.minimax.AbstractBoard;
+import loa.minimax.AbstractGame;
 
 import java.util.*;
 import java.util.List;
 
-import static loa.core.Piece.*;
-import static loa.core.Direction.*;
+import static loa.core.board.Piece.*;
+import static loa.core.board.Direction.*;
 
-public class Board extends AbstractBoard<Piece, Move, Board> implements Iterable<Move> {
+
+/**
+ * The Board class should extend the AbstractBoard
+ * so the Board class has the class method necessary for
+ * the adversarial search algorithms to work,
+ * such as getting the legal moves and
+ * list of moves to track the game state.
+ */
+public class Board extends AbstractGame<Piece, Move, Board> implements Iterable<Move> {
 
     public static final int SIZE = 8;
 
@@ -68,7 +76,7 @@ public class Board extends AbstractBoard<Piece, Move, Board> implements Iterable
 	 * @param row (y)
 	 * @return currentState[row][column]
 	 */
-    public Piece get(int column, int row) {
+    Piece get(int column, int row) {
         return currentState[row][column];
     }
 
@@ -81,7 +89,7 @@ public class Board extends AbstractBoard<Piece, Move, Board> implements Iterable
     }
 
 
-    public void set(int column, int row, Piece currentTurn) {
+    private void set(int column, int row, Piece currentTurn) {
         set(column, row, currentTurn, null);
     }
 
@@ -105,7 +113,7 @@ public class Board extends AbstractBoard<Piece, Move, Board> implements Iterable
     }
 
 
-    public List<Coordinates> arrayofCoordinates(Piece side) {
+    private List<Coordinates> arrayofCoordinates(Piece side) {
         List<Coordinates> coordinates = new ArrayList<>();
         for(int row = 0; row < SIZE; row++) {
             for(int col = 0; col < SIZE; col++) {
@@ -118,7 +126,7 @@ public class Board extends AbstractBoard<Piece, Move, Board> implements Iterable
     }
 
 
-    public int checkAroundPiece(int c, int r, Set<Coordinates> hashSet) {
+    private int checkAroundPiece(int c, int r, Set<Coordinates> hashSet) {
         Piece piece = get(c, r);
         Coordinates point = new Coordinates(c, r);
         hashSet.add(point);
@@ -182,17 +190,17 @@ public class Board extends AbstractBoard<Piece, Move, Board> implements Iterable
         if (dCol < 0 && dRow > 0) {
             return NW;
         }
-        if (dCol > 0 && dRow < 0) {
+        if (dCol > 0) {
             return SE;
         }
-        if (dCol < 0 && dRow < 0) {
+        if (dCol < 0) {
             return SW;
         }
         return NOWHERE;
     }
 
 
-	public int pieceCountAlong(Move move) {
+	private int pieceCountAlong(Move move) {
         Direction d = getDirection(move);
         return pieceCountAlong(move.getCol0(), move.getRow0(), d);
     }
@@ -227,14 +235,19 @@ public class Board extends AbstractBoard<Piece, Move, Board> implements Iterable
         if (move == null) {
             return true;
         }
+
         int c0 = move.getCol0();
         int r0 = move.getRow0();
         int c1 = move.getCol1();
         int r1 = move.getRow1();
+
         if (get(c1, r1) == turn) {
             return true;
         }
-        int deltaR = 0, deltaC = 0;
+
+        int deltaR = 0,
+            deltaC = 0;
+
         if (r1 > r0) {
             deltaR = 1;
         }
@@ -267,11 +280,16 @@ public class Board extends AbstractBoard<Piece, Move, Board> implements Iterable
 
     @Override
     public void makeMove(Move move) {
-        if(move == null) return;
+        if(move == null) {
+            return;
+        }
         moves.add(move);
 
-        int c0 = move.getCol0(), c1 = move.getCol1();
-        int r0 = move.getRow0(), r1 = move.getRow1();
+        int c0 = move.getCol0(),
+            c1 = move.getCol1();
+
+        int r0 = move.getRow0(),
+            r1 = move.getRow1();
 
         set(c1, r1, move.movedPiece());
         set(c0, r0, EMP);
@@ -281,9 +299,7 @@ public class Board extends AbstractBoard<Piece, Move, Board> implements Iterable
 
     @Override
     public void copyFrom(Board gameState) {
-        if (gameState == this) {
-            return;
-        }
+
         moves = new ArrayList<>();
         moves.addAll(gameState.moves);
         turn = gameState.turn;
@@ -314,80 +330,12 @@ public class Board extends AbstractBoard<Piece, Move, Board> implements Iterable
 
     @Override
     public Iterator<Move> getLegalMoves() {
-        return new MoveIterator();
+        return new MoveIterator(this);
     }
 
     @Override
     public Piece getTurn() {
         return turn;
-    }
-
-
-    private class MoveIterator implements Iterator<Move> {
-
-        private int col;
-        private int row;
-        private Direction dir;
-        private Move move;
-
-        private MoveIterator() {
-            col = 0;
-            row = 0;
-            dir = N;
-            incr();
-        }
-
-
-        @Override
-        public boolean hasNext() {
-            return move != null;
-        }
-
-
-        @Override
-        public Move next() {
-            if (move == null) {
-                throw new NoSuchElementException("no legal move");
-            }
-
-            Move move = this.move;
-            incr();
-            return move;
-        }
-
-
-        @Override
-        public void remove() {
-        }
-
-
-        private void incr() {
-
-            move = null;
-
-            while (row < SIZE) {
-                while (col < SIZE) {
-                    if (get(col, row) != EMP) {
-                        while (dir != null) {
-                            move = Move.create(col, row, pieceCountAlong(col, row, dir), dir, Board.this);
-                            dir = dir.next();
-                            if (isLegal(move)) {
-                                return;
-                            }
-                        }
-                    }
-                    if (col == SIZE -1) {
-                        col = 0;
-                        dir = N;
-                        break;
-                    } else {
-                        col++;
-                        dir = N;
-                    }
-                }
-                row++;
-            }
-        }
     }
 
 	public int evaluator() {
@@ -405,7 +353,7 @@ public class Board extends AbstractBoard<Piece, Move, Board> implements Iterable
 		return value;
 	}
 
-    public int concentration(Piece side) {
+    private int concentration(Piece side) {
         int centerR = 0;
         int centerC = 0;
         int count = 0;
@@ -438,7 +386,7 @@ public class Board extends AbstractBoard<Piece, Move, Board> implements Iterable
     }
 
 
-    public int centralisation(List<Coordinates> pieces) {
+    private int centralisation(List<Coordinates> pieces) {
         int[][] pieceSquareTable = {{-80, -25, -20, -20, -20, -20, -25, -80},
                 {-25,  10,  10,  10,  10,  10,  10, -25},
                 {-20,  10,  25,  25,  25,  25,  10, -20},

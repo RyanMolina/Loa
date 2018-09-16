@@ -1,5 +1,6 @@
 package loa.minimax;
 
+
 /**
  *
  * @param <S> type of Game Tree

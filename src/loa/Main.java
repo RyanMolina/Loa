@@ -16,8 +16,8 @@ public class Main {
         game.play();
 
 
-        /**
-         * Testing
+        /*
+          Testing
          */
         Result result = JUnitCore.runClasses(UnitTest.class);
 

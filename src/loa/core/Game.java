@@ -18,7 +18,7 @@ import java.util.List;
 import static loa.core.board.Board.SIZE;
 import static loa.core.board.Piece.*;
 
-public class GameFrame extends JFrame implements ActionListener {
+public class Game extends JFrame implements ActionListener {
 
     private Board board;
     private Player[] players;
@@ -29,7 +29,7 @@ public class GameFrame extends JFrame implements ActionListener {
 
     private BoardPane boardPane;
 
-    public GameFrame() {
+    public Game() {
         setTitle("Lines of Action");
         setResizable(false);
 
@@ -119,7 +119,7 @@ public class GameFrame extends JFrame implements ActionListener {
     }
 
     /**
-     * GameFrame Loop
+     * Game Loop
      */
     public void play() {
         while (!board.gameOver()) {

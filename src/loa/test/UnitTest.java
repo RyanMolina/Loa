@@ -1,13 +1,13 @@
 package loa.test;
 
-import loa.core.Board;
-import loa.core.Move;
-import loa.core.Piece;
+import loa.core.board.Board;
+import loa.core.board.Move;
+import loa.core.board.Piece;
 import org.junit.Test;
 
-import static loa.core.Piece.BP;
-import static loa.core.Piece.EMP;
-import static loa.core.Piece.WP;
+import static loa.core.board.Piece.BP;
+import static loa.core.board.Piece.EMP;
+import static loa.core.board.Piece.WP;
 import static org.junit.Assert.assertEquals;
 
 /**

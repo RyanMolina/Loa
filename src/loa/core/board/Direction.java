@@ -1,6 +1,6 @@
-package loa.core;
+package loa.core.board;
 
-enum Direction {
+public enum Direction {
 
     NOWHERE(0, 0),
     N(0, 1),
@@ -15,14 +15,14 @@ enum Direction {
     NW(-1, 1);
 
 
-    protected final int dc, dr;
+    public final int dc, dr;
 
     Direction(int dc, int dr) {
         this.dc = dc;
         this.dr = dr;
     }
 
-    Direction next() {
+    public Direction next() {
         return (this == NW) ? null : values()[ordinal() + 1];
     }
 

@@ -1,13 +1,8 @@
-package loa.core;
+package loa.core.adversarial_search;
 
-import loa.core.Board;
-import loa.core.Coordinates;
-import loa.core.Move;
+import loa.core.board.Board;
+import loa.core.board.Move;
 import loa.minimax.AbstractAlphaBeta;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by ryang on 16/06/2017.

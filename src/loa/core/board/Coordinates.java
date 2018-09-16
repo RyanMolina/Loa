@@ -1,4 +1,4 @@
-package loa.core;
+package loa.core.board;
 
 
 /**
